@@ -6,6 +6,5 @@ Sample Spring Boot API Server
 + SpringBoot
 + LomBook
 + Spring Web
-+ Thymeleaf
-+ Spring Boot DevTools
 + H2 DataBase
++ Spring Security
