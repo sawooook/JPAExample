@@ -9,3 +9,4 @@ Sample Spring Boot API Server
 + Thymeleaf
 + Spring Boot DevTools
 + H2 DataBase
++ Spring Security
