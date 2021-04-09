@@ -8,6 +8,8 @@ import com.example.JPAExample.service.UserService;
 import com.example.JPAExample.utils.ApiUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -24,9 +26,9 @@ public class UserController {
     private final UserService userService;
 
     @PostMapping("/login")
-    public ApiUtils.ApiResult<LoginResponseDto> login(@Validated @RequestBody LoginRequestDto loginRequestDto) {
+    public ResponseEntity<LoginResponseDto> login(@Validated @RequestBody LoginRequestDto loginRequestDto) {
         LoginResponseDto response = userService.login(loginRequestDto);
-        return ApiUtils.success(response);
+        return ResponseEntity.ok().body(response);
     }
 
     @PostMapping

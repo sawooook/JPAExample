@@ -1,7 +1,6 @@
 package com.example.JPAExample.domain;
 
 import com.example.JPAExample.domain.etc.BaseEntity;
-import com.example.JPAExample.domain.etc.Email;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.springframework.util.StringUtils;
@@ -9,23 +8,37 @@ import org.springframework.util.StringUtils;
 import javax.persistence.*;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 import static com.google.common.base.Preconditions.*;
 
 @Entity
 @Getter
-public class User extends BaseEntity {
+@NoArgsConstructor
+public class User {
+
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "user_id")
+    @Column(name = "user_seq")
     private Long id;
+
     private String name;
+
     private String email;
+
+    @Column(name = "passwd")
     private String password;
-    private int loginCount;
+
+    @Column(name = "login_count", columnDefinition =  "integer default 0")
+    private Integer loginCount;
+
+    @Column(name = "last_login_at")
     private LocalDateTime lastLoginAt;
 
-    public User() {
-    }
+
+    @OneToMany(mappedBy = "user")
+    private List<Order> orderList = new ArrayList<>();
+
 
     public User(String name, String email, String password) {
         this(null, name, email, password, 0);
