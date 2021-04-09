@@ -1,6 +1,9 @@
 package com.example.JPAExample.controller;
 
 import com.example.JPAExample.dto.user.LoginRequestDto;
+import com.example.JPAExample.dto.user.LoginResponseDto;
+import com.example.JPAExample.dto.user.SignUpRequestDto;
+import com.example.JPAExample.service.JwtService;
 import com.example.JPAExample.service.UserService;
 import com.example.JPAExample.utils.ApiUtils;
 import lombok.RequiredArgsConstructor;
@@ -22,11 +25,14 @@ public class UserController {
     private final UserService userService;
 
     @PostMapping("/login")
-    public ApiUtils.ApiResult<LoginRequestDto> login(@Validated @RequestBody LoginRequestDto loginRequestDto) {
+    public ApiUtils.ApiResult<LoginResponseDto> login(@Validated @RequestBody LoginRequestDto loginRequestDto) {
+        LoginResponseDto response = userService.login(loginRequestDto);
+        return ApiUtils.success(response);
+    }
 
-        userService.login(loginRequestDto);
-
-        return ApiUtils.success(loginRequestDto);
-
+    @PostMapping
+    public ApiUtils.ApiResult<SignUpRequestDto> signUp(@Validated @RequestBody SignUpRequestDto signUpRequestDto) {
+        userService.save(signUpRequestDto);
+        return ApiUtils.success(null);
     }
 }

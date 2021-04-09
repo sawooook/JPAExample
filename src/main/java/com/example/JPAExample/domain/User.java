@@ -1,5 +1,6 @@
 package com.example.JPAExample.domain;
 
+import com.example.JPAExample.domain.etc.BaseEntity;
 import com.example.JPAExample.domain.etc.Email;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -14,18 +15,23 @@ import static com.google.common.base.Preconditions.*;
 @Entity
 @Getter
 @NoArgsConstructor
-public class User {
+public class User extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "user_id")
     private Long id;
     private String name;
-    private Email email;
+    private String email;
     private String password;
     private int loginCount;
-    private LocalDateTime lastLoginedAt;
+    private LocalDateTime lastLoginAt;
+    private LocalDateTime cratedAt;
 
-    public User(Long id, String name, Email email, String password, int loginCount) {
+    public User(String name, String email, String password) {
+        this(null, name, email, password, 0);
+    }
+
+    public User(Long id, String name, String email, String password, int loginCount) {
         checkValid(name, password);
         checkNotNull(email, "이메일은 반드시 입력되어야합니다");
         checkNotNull(password, "비밀번호는 반드시 입력되어야합니다.");
@@ -34,6 +40,8 @@ public class User {
         this.email = email;
         this.password = password;
         this.loginCount = loginCount;
+        this.cratedAt = LocalDateTime.now();
+        this.lastLoginAt = LocalDateTime.now();
     }
 
     private void checkValid(String name, String password) {
@@ -47,7 +55,7 @@ public class User {
 
     public void lastLoginUpdate() {
         loginCount += 1;
-        lastLoginedAt = LocalDateTime.now();
+        lastLoginAt = LocalDateTime.now();
     }
 
 }
