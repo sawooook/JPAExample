@@ -9,7 +9,7 @@ import com.example.JPAExample.dto.review.ReviewResponseDto;
 import com.example.JPAExample.repository.OrderRepository;
 import com.example.JPAExample.repository.ReviewRepository;
 import com.example.JPAExample.service.excption.DuplicatedReviewException;
-import com.example.JPAExample.service.excption.NotFoundOrderException;
+import com.example.JPAExample.service.excption.NotCompleteOrderException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -22,7 +22,7 @@ public class OrderService {
 
     public Order findByOrder(Long id) {
         Order order = orderRepository.findById(id)
-                .orElseThrow(NotFoundOrderException::new);
+                .orElseThrow(NotCompleteOrderException::new);
         return order;
     }
 
@@ -30,12 +30,12 @@ public class OrderService {
 
         // 주문을 완료 하지 않았을 경우
         if (isNotCompleteOrder(order.getState())) {
-            throw new NotFoundOrderException();
+            throw new NotCompleteOrderException("Could not write review for order 1 because state(REQUESTED) is not allowed");
         }
 
         // 이미 리뷰를 작성한 상태
         if (order.getReviewSeq() == 1) {
-            throw new DuplicatedReviewException();
+            throw new DuplicatedReviewException("Could not write review for order 4 because have already written");
         }
 
         Review review = new Review(order.getUser(), order.getProduct(), order, reviewRequestDto.getContent());

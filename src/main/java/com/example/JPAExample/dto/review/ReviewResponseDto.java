@@ -9,7 +9,6 @@ import java.time.LocalDateTime;
 @Getter @Setter
 public class ReviewResponseDto {
     private Long seq;
-    @JsonProperty(value = "product_id")
     private Long productId;
     private String content;
     private LocalDateTime createdAt;
