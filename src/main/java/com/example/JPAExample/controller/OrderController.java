@@ -8,6 +8,7 @@ import com.example.JPAExample.dto.review.ReviewRequestDto;
 import com.example.JPAExample.dto.review.ReviewResponseDto;
 import com.example.JPAExample.service.OrderService;
 import com.example.JPAExample.service.UserService;
+import com.example.JPAExample.utils.ApiUtils;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -46,5 +47,14 @@ public class OrderController {
 //        User user = userService.findOne(1L);
         List<OrderPagingResponseDto> orderList = orderService.findOrderList(pageable);
         return ResponseEntity.ok().body(orderList);
+    }
+
+    @GetMapping(value = "/{id}")
+    public ResponseEntity userOrderList(@PathVariable Long id) {
+        OrderPagingResponseDto orders = orderService.findByUserOrderList(id);
+
+        ApiResult<OrderPagingResponseDto> success = success(orders);
+
+        return ResponseEntity.ok().body(success);
     }
 }

@@ -3,6 +3,7 @@ package com.example.JPAExample.service;
 
 import com.example.JPAExample.domain.Order;
 import com.example.JPAExample.domain.Review;
+import com.example.JPAExample.domain.User;
 import com.example.JPAExample.domain.etc.OrderState;
 import com.example.JPAExample.dto.order.OrderPagingResponseDto;
 import com.example.JPAExample.dto.review.ReviewRequestDto;
@@ -37,22 +38,7 @@ public class OrderService {
         PageRequest page = PageRequest.of((int) pageable.getOffset(), pageable.getPageSize(), Sort.Direction.DESC,"id");
 
         List<Order> content = orderRepository.findAll(page).getContent();
-        List<OrderPagingResponseDto> response = new ArrayList<>();
-
-        for (Order order : content) {
-
-            ReviewResponseDto reviewResponseDto = null;
-
-            if (!order.getReviewList().isEmpty()) {
-                reviewResponseDto = new ReviewResponseDto(order.getReviewList().get(0).getId(), order.getProduct().getId(), order.getReviewList().get(0).getContent(), order.getReviewList().get(0).getCreatedAt());
-            }
-
-            OrderPagingResponseDto result = new OrderPagingResponseDto(order.getId(), order.getProduct().getId(), reviewResponseDto, order.getState(), order.getRequestMsg(),
-                    order.getRequestMsg(), order.getCompletedAt(), order.getRejectedAt(), order.getCompletedAt());
-            response.add(result);
-        }
-
-        return response;
+        return makeOrderResponse(content);
     }
 
     public ReviewResponseDto writeReview(Order order, ReviewRequestDto reviewRequestDto) {
@@ -76,5 +62,34 @@ public class OrderService {
 
     private boolean isNotCompleteOrder(OrderState state) {
         return state != OrderState.COMPLETED;
+    }
+
+    public OrderPagingResponseDto findByUserOrderList(Long id) {
+        Order order = orderRepository.findById(id).orElseThrow(NotCompleteOrderException::new);
+
+        ReviewResponseDto reviewResponseDto = null;
+        if (!order.getReviewList().isEmpty()) {
+            reviewResponseDto = new ReviewResponseDto(order.getReviewList().get(0).getId(),
+                    order.getReviewList().get(0).getProduct().getId(), order.getReviewList().get(0).getContent(),
+                    order.getReviewList().get(0).getCreatedAt());
+        }
+
+        return new OrderPagingResponseDto(order.getId(), order.getProduct().getId(), reviewResponseDto, order.getState(), order.getRequestMsg(), order.getRejectMsg(),
+                order.getCompletedAt(), order.getRejectedAt(), order.getCreatedAt());
+    }
+
+    private List<OrderPagingResponseDto> makeOrderResponse(List<Order> orders) {
+        List<OrderPagingResponseDto> response = new ArrayList<>();
+        for (Order order : orders) {
+            ReviewResponseDto reviewResponseDto = null;
+            if (!order.getReviewList().isEmpty()) {
+                reviewResponseDto = new ReviewResponseDto(order.getReviewList().get(0).getId(), order.getProduct().getId(), order.getReviewList().get(0).getContent(), order.getReviewList().get(0).getCreatedAt());
+            }
+            OrderPagingResponseDto result = new OrderPagingResponseDto(order.getId(), order.getProduct().getId(), reviewResponseDto, order.getState(), order.getRequestMsg(),
+                    order.getRequestMsg(), order.getCompletedAt(), order.getRejectedAt(), order.getCompletedAt());
+            response.add(result);
+        }
+
+        return response;
     }
 }
