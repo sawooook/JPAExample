@@ -47,4 +47,8 @@ public class UserService {
         user.lastLoginUpdate();
         userRepository.save(user);
     }
+
+    public User findOne(long id) {
+        return userRepository.findById(id).orElseThrow(NotFoundUserException::new);
+    }
 }

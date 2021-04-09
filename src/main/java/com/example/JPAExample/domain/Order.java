@@ -4,6 +4,8 @@ import com.example.JPAExample.domain.Product;
 import com.example.JPAExample.domain.etc.BaseEntity;
 import com.example.JPAExample.domain.etc.OrderState;
 import com.example.JPAExample.dto.review.ReviewRequestDto;
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -16,19 +18,22 @@ import java.util.List;
 @Getter
 @Table(name = "orders")
 @NoArgsConstructor
-public class Order {
+public class Order extends BaseEntity {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "order_seq")
     private Long id;
 
+    @JsonBackReference
     @ManyToOne
     @JoinColumn(name = "user_seq")
     private User user;
 
+    @JsonBackReference
     @ManyToOne
     @JoinColumn(name = "product_seq")
     private Product product;
 
+    @JsonManagedReference
     @OneToMany(mappedBy = "order")
     private List<Review> reviewList = new ArrayList<>();
 

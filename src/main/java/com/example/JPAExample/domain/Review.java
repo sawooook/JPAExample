@@ -1,6 +1,7 @@
 package com.example.JPAExample.domain;
 
 import com.example.JPAExample.domain.etc.BaseEntity;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.sun.istack.NotNull;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -16,14 +17,17 @@ public class Review extends BaseEntity{
     @Column(name = "review_seq")
     private Long id;
 
+    @JsonBackReference
     @ManyToOne
     @JoinColumn(name = "user_seq")
     private User user;
 
+    @JsonBackReference
     @ManyToOne
     @JoinColumn(name = "product_seq")
     private Product product;
 
+    @JsonBackReference
     @ManyToOne
     @JoinColumn(name = "order_seq")
     private Order order;

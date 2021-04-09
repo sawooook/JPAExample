@@ -1,6 +1,7 @@
 package com.example.JPAExample.domain;
 
 import com.example.JPAExample.domain.etc.BaseEntity;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.sun.istack.NotNull;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -29,6 +30,7 @@ public class Product {
     @Column(name = "review_count")
     private int reviewCount;
 
+    @JsonManagedReference
     @OneToMany(mappedBy = "product")
     private List<Order> orderList = new ArrayList<>();
 

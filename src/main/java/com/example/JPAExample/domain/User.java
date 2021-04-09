@@ -1,6 +1,7 @@
 package com.example.JPAExample.domain;
 
 import com.example.JPAExample.domain.etc.BaseEntity;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.springframework.util.StringUtils;
@@ -35,7 +36,7 @@ public class User {
     @Column(name = "last_login_at")
     private LocalDateTime lastLoginAt;
 
-
+    @JsonManagedReference
     @OneToMany(mappedBy = "user")
     private List<Order> orderList = new ArrayList<>();
 

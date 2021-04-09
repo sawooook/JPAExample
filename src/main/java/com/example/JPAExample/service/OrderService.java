@@ -4,6 +4,7 @@ package com.example.JPAExample.service;
 import com.example.JPAExample.domain.Order;
 import com.example.JPAExample.domain.Review;
 import com.example.JPAExample.domain.etc.OrderState;
+import com.example.JPAExample.dto.order.OrderPagingResponseDto;
 import com.example.JPAExample.dto.review.ReviewRequestDto;
 import com.example.JPAExample.dto.review.ReviewResponseDto;
 import com.example.JPAExample.repository.OrderRepository;
@@ -11,7 +12,13 @@ import com.example.JPAExample.repository.ReviewRepository;
 import com.example.JPAExample.service.excption.DuplicatedReviewException;
 import com.example.JPAExample.service.excption.NotCompleteOrderException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -24,6 +31,28 @@ public class OrderService {
         Order order = orderRepository.findById(id)
                 .orElseThrow(NotCompleteOrderException::new);
         return order;
+    }
+
+    public List<OrderPagingResponseDto> findOrderList(Pageable pageable) {
+        PageRequest page = PageRequest.of((int) pageable.getOffset(), pageable.getPageSize(), Sort.Direction.DESC,"id");
+
+        List<Order> content = orderRepository.findAll(page).getContent();
+        List<OrderPagingResponseDto> response = new ArrayList<>();
+
+        for (Order order : content) {
+
+            ReviewResponseDto reviewResponseDto = null;
+
+            if (!order.getReviewList().isEmpty()) {
+                reviewResponseDto = new ReviewResponseDto(order.getReviewList().get(0).getId(), order.getProduct().getId(), order.getReviewList().get(0).getContent(), order.getReviewList().get(0).getCreatedAt());
+            }
+
+            OrderPagingResponseDto result = new OrderPagingResponseDto(order.getId(), order.getProduct().getId(), reviewResponseDto, order.getState(), order.getRequestMsg(),
+                    order.getRequestMsg(), order.getCompletedAt(), order.getRejectedAt(), order.getCompletedAt());
+            response.add(result);
+        }
+
+        return response;
     }
 
     public ReviewResponseDto writeReview(Order order, ReviewRequestDto reviewRequestDto) {
