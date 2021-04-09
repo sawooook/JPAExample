@@ -13,4 +13,7 @@ public class Product {
     private String name;
     private String details;
     private int reviewCount;
+
+    public Product() {
+    }
 }

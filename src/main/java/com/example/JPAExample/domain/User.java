@@ -14,10 +14,8 @@ import static com.google.common.base.Preconditions.*;
 
 @Entity
 @Getter
-@NoArgsConstructor
 public class User extends BaseEntity {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "user_id")
     private Long id;
     private String name;
@@ -25,7 +23,9 @@ public class User extends BaseEntity {
     private String password;
     private int loginCount;
     private LocalDateTime lastLoginAt;
-    private LocalDateTime cratedAt;
+
+    public User() {
+    }
 
     public User(String name, String email, String password) {
         this(null, name, email, password, 0);
@@ -40,7 +40,6 @@ public class User extends BaseEntity {
         this.email = email;
         this.password = password;
         this.loginCount = loginCount;
-        this.cratedAt = LocalDateTime.now();
         this.lastLoginAt = LocalDateTime.now();
     }
 

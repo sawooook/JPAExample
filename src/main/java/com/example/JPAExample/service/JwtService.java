@@ -3,10 +3,12 @@ package com.example.JPAExample.service;
 import com.example.JPAExample.service.excption.JwtGenerateException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
+import org.springframework.stereotype.Service;
 
 import java.io.UnsupportedEncodingException;
 import java.util.Date;
 
+@Service
 public class JwtService {
     private static final String SECRET = "sawoook_secret_key";
     private static final String CHARSET = "UTF-8";

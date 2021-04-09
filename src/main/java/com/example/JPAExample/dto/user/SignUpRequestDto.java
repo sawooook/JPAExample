@@ -9,6 +9,9 @@ public class SignUpRequestDto {
     private String password;
     private String name;
 
+    public SignUpRequestDto() {
+    }
+
     public SignUpRequestDto(String email, String password, String name) {
         this.email = email;
         this.password = password;
